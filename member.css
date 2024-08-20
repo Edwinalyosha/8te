@@ -1,0 +1,82 @@
+header{
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-size: xx-large;
+    font-weight: bolder;
+    height:fit-content;
+    letter-spacing:1px;
+}
+
+header span{
+    font-weight: initial;
+}
+
+section{
+    padding:2vh 5vw;
+}
+
+#section-1 div, #section-2 div{
+    padding:2vh 3vw;
+    line-height:2em;
+    font-size:15pt;
+    letter-spacing:1px;
+    border: 1px solid var(--primary-color-1);
+
+
+}
+
+#section-1 p{
+    font-size:9pt;
+    color:var(--paled-text);
+    line-height:1em;
+}
+
+#section-2 h3{
+    font-weight:bold;
+}
+
+#section-2 table{
+    font-size:12pt;
+    line-height:1.6em;
+    table-layout:fixed;
+    overflow-x: scroll;
+}
+
+#section-2 th{
+    border-bottom:0.5px solid var(--primary-color-1);
+    border-right:0.5px solid var(--primary-color-1);
+    border-left:0.5px solid var(--primary-color-1);
+    line-height:1.3em;
+}
+
+#section-2 th, #section-2 td{
+    width:11em;
+}
+
+
+#section-3{
+    font-size:12pt;
+    line-height: 1.6em;
+    color:var(--paled-text);
+}
+
+@media(max-width:790px){
+    header{
+        font-size:x-large;
+    }
+
+    #section-1 div{
+        font-size:13pt;
+    }
+
+    #section-1 p{
+        font-size:8pt;
+    }
+
+    #section-2 table{
+        font-size:11pt;
+    }
+
+    #section-3{
+        font-size:9pt
+    }
+}
