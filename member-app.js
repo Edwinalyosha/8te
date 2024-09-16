@@ -29,8 +29,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 const pool = new Pool({
     user: 'postgres',
     host: 'localhost',
-    database: 'sage_test',
-    password: 'Starlight@10.',
+    database: '***********',
+    password: '***********',
     port: 5432,
 });
 
