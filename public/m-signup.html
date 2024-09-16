@@ -10,7 +10,7 @@
 <body>
     <div  class="signup-container">
         <h2>Sign Up</h2>
-        <form id= "signup">
+        <form id= "signup" action="/views/m-login.html" method="post">
             <div class="form-group">
                 <label for="surname">Surname:</label>
                 <input type="text" id="surname" name="surname" required>
@@ -41,6 +41,6 @@
         <a href="m-login.html" class="existing-member-link">Already a member? Log in here</a>
     </div>
 
-    <script src="member.js"></script>
+    <script src="/authentication_js/member.js"></script>
 </body>
 </html>
