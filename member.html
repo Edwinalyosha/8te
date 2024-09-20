@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="shared.css">
+    <link rel="stylesheet" type="text/css" href="member.css">
+    <title>Member Overview</title>
+</head>
+<body>
+    <header>
+        <div id="name">
+            8te Ventures Group: <span>member overview</span>
+        </div>
+    </header>
+
+    <section id="section-1">
+        <div>
+            Member Name: <span id="member-name" class="b"></span> <br>
+            Paid <span id="weeks-paid" class="u b"></span> weeks of <span class="u b">40</span>. 
+            <p>(currently at UGX 15000 per week)</p>
+        </div>
+    </section>
+    
+    <section id="section-2">
+        <div>
+            <h3>Outstanding loans:</h3>
+            <table id="loans-table">
+                <tr>
+                    <th>Date</th>
+                    <th>Amount</th>
+                    <th>Interest</th>
+                    <th>Balance</th>
+                </tr>
+                <!-- Loan data will be inserted here -->
+            </table> 
+        </div>
+    </section>
+
+    <section id="section-3">
+        <h3>Note:</h3>
+        <ul>
+            <li>Our next meeting is scheduled for 31/08/24.</li>
+            <li>Weekly payments are set to UGX 15000 for dates earlier than 31/08/24. </li>
+            <li>Weekly payments are set to UGX 20000 for dates later than 31/08/24. </li>
+            <li>Dates are in the 'dd/dd/yy' format.</li>
+        </ul>
+    </section>
+
+    <script>
+        // Fetch member details and loans from the server
+document.addEventListener('DOMContentLoaded', async function() {
+    try {
+        const response = await fetch('http://127.0.0.1:5011/api/member', {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include'
+        });
+        if (response.ok) {
+            const data = await response.json();
+
+            // Populate member info
+            document.getElementById('member-name').textContent = `${data.member_info.firstname} ${data.member_info.surname}`;
+            document.getElementById('weeks-paid').textContent = data.member_info.weeks_paid;
+
+            // Populate loan info
+            const loansTable = document.getElementById('loans-table');
+            data.loans.forEach(loan => {
+                const row = loansTable.insertRow();
+                row.innerHTML = `
+                    <td>${loan.t_date}</td>
+                    <td>${loan.amount}</td>
+                    <td>${loan.interest ? loan.interest : 'N/A'}</td>
+                    <td>${loan.balance}</td>
+                `;
+            });
+        } else {
+            console.error('Failed to fetch member data:', await response.json());
+        }
+    } catch (error) {
+        console.error('Error fetching member data:', error);
+    }
+});
+    </script>
+</body>
+</html>
+

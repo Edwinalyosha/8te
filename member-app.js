@@ -11,6 +11,7 @@ const pgSession = require('connect-pg-simple')(session);
 app.use(cors({
     origin: ['http://127.0.0.1:5500', 'http://localhost:5011'], // Allow requests from frontend origins
     credentials: true, // Allow cookies to be sent with the request
+    methods: ['GET', 'POST', 'OPTIONS']
 }));
 
 app.use(bodyParser.urlencoded({ extended: true }));  // To handle form submissions
@@ -29,8 +30,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 const pool = new Pool({
     user: 'postgres',
     host: 'localhost',
-    database: '***********',
-    password: '***********',
+    database: 'tic_test2',
+    password: 'dorilla123',
     port: 5432,
 });
 
@@ -44,11 +45,20 @@ app.use(session({
     saveUninitialized: false,
     cookie: {
         path: '/',
-        sameSite: 'lax',
+        sameSite: 'none',
         secure: false,  // Should be true if using HTTPS in production
-        httpOnly: true  // Helps mitigate XSS attacks
+        httpOnly: true,  // Helps mitigate XSS attacks
+        maxAge: 12 * 60 * 60 * 1000 // 12 hours
     }
 }));
+
+app.use((req, res, next) => {
+    console.log('New request received');
+    console.log('Session ID:', req.sessionID);
+    console.log('Session Data:', req.session);
+    console.log('Cookies:', req.headers.cookie);
+    next(); 
+  });
 
 // Serve the signup page (static HTML file)
 app.get('/signup', (req, res) => {
@@ -108,9 +118,21 @@ app.post('/api/signin', async (req, res) => {
 
         // Set session or JWT token
         req.session.email = email; // If you're using sessions
-
-        // Respond with redirect URL
+        req.session.save((err) => {
+            // if (err) console.error('Session save error:', err);
+            // res.cookie('sessionId', req.sessionID, {
+            //     maxAge: 24 * 60 * 60 * 1000,
+            //     httpOnly: true,
+            //     secure: false, // Set to true if using HTTPS
+            //     sameSite: 'lax'
+            //   });   ====>>> this is the test cookie that we can use to resolve this issue.
+            // Respond with redirect URL
         res.status(200).json({ message: 'Login successful', redirectUrl: '/member.html' }); // Adjust the redirect URL
+          });
+          console.log('Session after signin:', req.session);
+        console.log('Response headers:', res.getHeaders());
+
+        
     } catch (error) {
         console.error('Error during login:', error);
         res.status(500).json({ message: 'Internal server error' });
@@ -121,7 +143,9 @@ app.post('/api/signin', async (req, res) => {
 
 // Member endpoint
 app.get('/api/member', async (req, res) => {
+
     const email = req.session.email;
+    console.log(email);
 
     if (!email) {
         return res.status(401).json({ message: 'Unauthorized: No session email found' });
@@ -164,6 +188,8 @@ app.get('/api/member', async (req, res) => {
         res.status(500).json({ message: 'Server Error' });
     }
 });
+
+
 
 
 // Start server
